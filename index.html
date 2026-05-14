@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Read2Win</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <input type="text" id="playerName" placeholder="Enter Your Name" required
+        style="padding:10px; width:250px; font-size:16px;">
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        p {
+
+            font-size: 18px;
+
+            line-height: 1.8;
+
+        }
+
+        input {
+
+            margin-top: 10px;
+
+            margin-bottom: 10px;
+
+        }
+
+        h1 {
+            color: #222;
+        }
+
+        #timer {
+            font-size: 24px;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        #storyBox {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        button {
+
+            margin-top: 20px;
+
+            padding: 15px 25px;
+
+            font-size: 18px;
+
+            background-color: black;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            width: 100%;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📚 Read2Win</h1>
+
+    <div id="timer">
+        Time Left: 15:00
+    </div>
+
+    <div id="storyBox">
+
+        <h2>The Mystery of Green Valley School Fair</h2>
+
+        <p>
+            Green Valley School was very excited because the annual school fair was coming on Saturday, 15th June.
+        </p>
+
+        <p>
+            The principal, Mrs. Anita Sharma, announced that students from Class 1 to Class 5 would participate in
+            different activities.
+        </p>
+
+        <p>
+            The school had 520 students in total.
+        </p>
+
+        <p>
+            Out of them:
+            110 students were from Class 1,
+            95 students were from Class 2,
+            105 students were from Class 3,
+            100 students were from Class 4,
+            and 110 students were from Class 5.
+        </p>
+
+        <p>
+            The fair would begin at 10:00 AM and end at 5:00 PM.
+        </p>
+
+        <p>
+            There were many stalls planned for the fair:
+            8 food stalls,
+            5 game stalls,
+            3 book stalls,
+            and 2 science project stalls.
+        </p>
+
+        <p>
+            The school invited 12 teachers and 20 parents to help manage the fair.
+        </p>
+
+        <p>
+            Class 4 students were given special responsibilities.
+        </p>
+
+        <p>
+            Riya and Arjun were selected as team leaders for Class 4.
+        </p>
+
+        <p>
+            Their teacher, Mr. Rajesh, divided 100 Class 4 students into 4 groups:
+            Red Group – 25 students,
+            Blue Group – 20 students,
+            Green Group – 30 students,
+            Yellow Group – 25 students.
+        </p>
+
+        <p>
+            The Red Group decorated the entrance gate using:
+            50 balloons,
+            20 paper flowers,
+            and 15 ribbons.
+        </p>
+
+        <p>
+            The Blue Group managed the drinking water area.
+            They arranged:
+            10 water jars,
+            200 paper cups,
+            and 4 tables.
+        </p>
+
+        <p>
+            The Green Group prepared games for younger children.
+            They organized Ring Toss, Balloon Shooting, and Lucky Draw.
+        </p>
+
+        <p>
+            The Yellow Group worked at the book stall.
+        </p>
+
+        <p>
+            The book stall sold:
+            40 story books,
+            35 drawing books,
+            and 25 science magazines.
+        </p>
+
+        <p>
+            Each story book cost ₹50.
+            Each drawing book cost ₹30.
+            Each science magazine cost ₹40.
+        </p>
+
+        <p>
+            At 11:30 AM, the principal announced the start of the Treasure Hunt Competition.
+        </p>
+
+        <p>
+            There were 10 teams in the competition.
+            Each team had 5 students.
+        </p>
+
+        <p>
+            The winning team received:
+            5 gold medals,
+            a trophy,
+            and chocolates.
+        </p>
+
+        <p>
+            At lunchtime, the food stalls became very crowded.
+        </p>
+
+        <p>
+            The most popular food item was samosa.
+        </p>
+
+        <p>
+            The food stalls sold:
+            320 samosas,
+            210 sandwiches,
+            180 juice boxes,
+            and 150 ice creams.
+        </p>
+
+        <p>
+            One samosa cost ₹15.
+            One sandwich cost ₹25.
+            One juice box cost ₹20.
+            One ice cream cost ₹30.
+        </p>
+
+        <p>
+            By 3:00 PM, the school had collected ₹18,500 from all stalls.
+        </p>
+
+        <p>
+            The principal decided to use the money for:
+            new library books,
+            sports equipment,
+            and classroom plants.
+        </p>
+
+        <p>
+            At the end of the fair, the principal thanked everyone for their hard work.
+        </p>
+
+        <p>
+            Mrs. Sharma said,
+            “Teamwork and honesty are more important than winning.”
+        </p>
+
+        <p>
+            All students clapped happily, and the fair ended successfully at 5:00 PM.
+        </p>
+
+    </div>
+
+    <button id="finishBtn" onclick="showQuiz()">
+        I Finished Reading
+    </button>
+
+    <div id="quizBox" style="display:none; margin-top:40px;">
+
+        <h2>Quiz Time</h2>
+
+        <!-- Question 1 -->
+        <p>1. How many students were there in Green Valley School?</p>
+
+        <input type="radio" name="q1" value="500"> 500 <br>
+        <input type="radio" name="q1" value="520"> 520 <br>
+        <input type="radio" name="q1" value="530"> 530 <br>
+        <input type="radio" name="q1" value="540"> 540 <br>
+
+        <br><br>
+
+        <!-- Question 2 -->
+        <p>2. On which date was the school fair held?</p>
+
+        <input type="radio" name="q2" value="10"> 10th June <br>
+        <input type="radio" name="q2" value="12"> 12th June <br>
+        <input type="radio" name="q2" value="15"> 15th June <br>
+        <input type="radio" name="q2" value="20"> 20th June <br>
+
+        <br><br>
+
+        <!-- Question 3 -->
+        <p>3. At what time did the fair begin?</p>
+
+        <input type="radio" name="q3" value="9"> 9:00 AM <br>
+        <input type="radio" name="q3" value="10"> 10:00 AM <br>
+        <input type="radio" name="q3" value="11"> 11:00 AM <br>
+        <input type="radio" name="q3" value="12"> 12:00 PM <br>
+
+        <br><br>
+
+        <!-- Question 4 -->
+        <p>4. How many game stalls were there?</p>
+
+        <input type="radio" name="q4" value="3"> 3 <br>
+        <input type="radio" name="q4" value="4"> 4 <br>
+        <input type="radio" name="q4" value="5"> 5 <br>
+        <input type="radio" name="q4" value="6"> 6 <br>
+
+        <br><br>
+
+        <!-- Question 5 -->
+        <p>5. Who were selected as team leaders for Class 4?</p>
+
+        <input type="radio" name="q5" value="Mohan"> Mohan and Ravi <br>
+        <input type="radio" name="q5" value="Riya"> Riya and Arjun <br>
+        <input type="radio" name="q5" value="Aman"> Aman and Sita <br>
+        <input type="radio" name="q5" value="Tina"> Tina and Rahul <br>
+
+        <br><br>
+
+        <!-- Question 6 -->
+        <p>6. How many students were in the Green Group?</p>
+
+        <input type="radio" name="q6" value="20"> 20 <br>
+        <input type="radio" name="q6" value="25"> 25 <br>
+        <input type="radio" name="q6" value="30"> 30 <br>
+        <input type="radio" name="q6" value="35"> 35 <br>
+
+        <br><br>
+
+        <!-- Question 7 -->
+        <p>7. How many balloons did the Red Group use?</p>
+
+        <input type="radio" name="q7" value="30"> 30 <br>
+        <input type="radio" name="q7" value="40"> 40 <br>
+        <input type="radio" name="q7" value="50"> 50 <br>
+        <input type="radio" name="q7" value="60"> 60 <br>
+
+        <br><br>
+
+        <!-- Question 8 -->
+        <p>8. How many water jars were arranged by the Blue Group?</p>
+
+        <input type="radio" name="q8" value="8"> 8 <br>
+        <input type="radio" name="q8" value="9"> 9 <br>
+        <input type="radio" name="q8" value="10"> 10 <br>
+        <input type="radio" name="q8" value="12"> 12 <br>
+
+        <br><br>
+
+        <!-- Question 9 -->
+        <p>9. Which group worked at the book stall?</p>
+
+        <input type="radio" name="q9" value="Red"> Red Group <br>
+        <input type="radio" name="q9" value="Blue"> Blue Group <br>
+        <input type="radio" name="q9" value="Green"> Green Group <br>
+        <input type="radio" name="q9" value="Yellow"> Yellow Group <br>
+
+        <br><br>
+
+        <!-- Question 10 -->
+        <p>10. How much did one story book cost?</p>
+
+        <input type="radio" name="q10" value="30"> ₹30 <br>
+        <input type="radio" name="q10" value="40"> ₹40 <br>
+        <input type="radio" name="q10" value="50"> ₹50 <br>
+        <input type="radio" name="q10" value="60"> ₹60 <br>
+
+        <br><br>
+
+        <!-- Question 11 -->
+        <p>11. How many teams participated in the Treasure Hunt Competition?</p>
+
+        <input type="radio" name="q11" value="8"> 8 <br>
+        <input type="radio" name="q11" value="9"> 9 <br>
+        <input type="radio" name="q11" value="10"> 10 <br>
+        <input type="radio" name="q11" value="12"> 12 <br>
+
+        <br><br>
+
+        <!-- Question 12 -->
+        <p>12. How many students were there in each treasure hunt team?</p>
+
+        <input type="radio" name="q12" value="4"> 4 <br>
+        <input type="radio" name="q12" value="5"> 5 <br>
+        <input type="radio" name="q12" value="6"> 6 <br>
+        <input type="radio" name="q12" value="7"> 7 <br>
+
+        <br><br>
+
+        <!-- Question 13 -->
+        <p>13. Which food item was the most popular?</p>
+
+        <input type="radio" name="q13" value="Sandwich"> Sandwich <br>
+        <input type="radio" name="q13" value="Juice"> Juice Box <br>
+        <input type="radio" name="q13" value="IceCream"> Ice Cream <br>
+        <input type="radio" name="q13" value="Samosa"> Samosa <br>
+
+        <br><br>
+
+        <!-- Question 14 -->
+        <p>14. How much money did the school collect from all stalls?</p>
+
+        <input type="radio" name="q14" value="15000"> ₹15,000 <br>
+        <input type="radio" name="q14" value="16500"> ₹16,500 <br>
+        <input type="radio" name="q14" value="18500"> ₹18,500 <br>
+        <input type="radio" name="q14" value="20000"> ₹20,000 <br>
+
+        <br><br>
+
+        <!-- Question 15 -->
+        <p>15. What message did Mrs. Sharma give at the end?</p>
+
+        <input type="radio" name="q15" value="Winning"> Winning is everything <br>
+        <input type="radio" name="q15" value="Teamwork"> Teamwork and honesty are important <br>
+        <input type="radio" name="q15" value="Food"> Food stalls are best <br>
+        <input type="radio" name="q15" value="Games"> Games are important <br>
+
+        <br><br>
+        <button id="submitBtn" onclick="submitQuiz()">
+            Submit Quiz
+        </button>
+
+        <h2 id="result"></h2>
+        <div id="answerReview"></div>
+    </div>
+    <script>
+
+        let timeLeft = 15 * 60;
+        let quizTimeLeft = 10 * 60;
+
+        let timer = document.getElementById("timer");
+
+        let countdown;
+        let quizCountdown;
+
+        countdown = setInterval(function () {
+
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+
+            timer.innerHTML = "Time Left: " + minutes + ":" + seconds;
+
+            timeLeft--;
+
+            if (timeLeft < 0) {
+
+                clearInterval(countdown);
+
+                timer.innerHTML = "Reading Time Finished!";
+
+                document.getElementById("finishBtn").disabled = false;
+            }
+
+        }, 1000);
+
+
+        function showQuiz() {
+
+            clearInterval(countdown);
+
+            timer.innerHTML = "Reading Time Finished!<br><br>Quiz Time Left: 10:00";
+
+            document.getElementById("storyBox").style.display = "none";
+
+            document.getElementById("quizBox").style.display = "block";
+
+            document.getElementById("finishBtn").style.display = "none";
+
+            startQuizTimer();
+        }
+
+        function startQuizTimer() {
+
+            quizCountdown = setInterval(function () {
+
+                quizTimeLeft--;
+
+                let minutes =
+                    Math.floor(quizTimeLeft / 60);
+
+                let seconds =
+                    quizTimeLeft % 60;
+
+                if (seconds < 10) {
+
+                    seconds = "0" + seconds;
+
+                }
+
+                timer.innerHTML =
+                    "Reading Time Finished!<br><br>" +
+                    "Quiz Time Left: "
+                    + minutes + ":" + seconds;
+
+                if (quizTimeLeft <= 0) {
+
+                    clearInterval(quizCountdown);
+
+                    alert("Quiz Time Finished!");
+
+                    submitQuiz();
+
+                }
+
+            }, 1000);
+
+        }
+
+        function submitQuiz() {
+            clearInterval(quizCountdown);
+            let score = 0;
+            let totalQuestions = 15;
+
+            let unansweredQuestions = [];
+
+            for (let i = 1; i <= totalQuestions; i++) {
+
+                let answer =
+                    document.querySelector('input[name="q' + i + '"]:checked');
+
+                if (!answer) {
+
+                    unansweredQuestions.push(i);
+
+                }
+
+            }
+
+            if (unansweredQuestions.length > 0) {
+
+                alert(
+                    "Please answer Questions: "
+                    + unansweredQuestions.join(", ")
+                );
+
+                return;
+
+            }
+
+            let playerName =
+                document.getElementById("playerName").value.trim();
+
+            if (playerName === "") {
+
+                alert("Please enter your name");
+
+                return;
+
+            }
+
+            // Question 1
+            let q1 = document.querySelector('input[name="q1"]:checked');
+
+            if (q1 && q1.value === "520") {
+
+                score++;
+
+            }
+
+            // Question 2
+            let q2 = document.querySelector('input[name="q2"]:checked');
+
+            if (q2 && q2.value === "15") {
+
+                score++;
+
+            }
+
+            // Question 3
+            let q3 = document.querySelector('input[name="q3"]:checked');
+
+            if (q3 && q3.value === "10") {
+
+                score++;
+
+            }
+
+            // Question 4
+            let q4 = document.querySelector('input[name="q4"]:checked');
+
+            if (q4 && q4.value === "5") {
+
+                score++;
+
+            }
+
+            // Question 5
+            let q5 = document.querySelector('input[name="q5"]:checked');
+
+            if (q5 && q5.value === "Riya") {
+
+                score++;
+
+            }
+
+            // Question 6
+            let q6 = document.querySelector('input[name="q6"]:checked');
+
+            if (q6 && q6.value === "30") {
+
+                score++;
+
+            }
+
+            // Question 7
+            let q7 = document.querySelector('input[name="q7"]:checked');
+
+            if (q7 && q7.value === "50") {
+
+                score++;
+
+            }
+
+            // Question 8
+            let q8 = document.querySelector('input[name="q8"]:checked');
+
+            if (q8 && q8.value === "10") {
+
+                score++;
+
+            }
+
+            // Question 9
+            let q9 = document.querySelector('input[name="q9"]:checked');
+
+            if (q9 && q9.value === "Yellow") {
+
+                score++;
+
+            }
+
+            // Question 10
+            let q10 = document.querySelector('input[name="q10"]:checked');
+
+            if (q10 && q10.value === "50") {
+
+                score++;
+
+            }
+
+            // Question 11
+            let q11 = document.querySelector('input[name="q11"]:checked');
+
+            if (q11 && q11.value === "10") {
+
+                score++;
+
+            }
+
+            // Question 12
+            let q12 = document.querySelector('input[name="q12"]:checked');
+
+            if (q12 && q12.value === "5") {
+
+                score++;
+
+            }
+
+            // Question 13
+            let q13 = document.querySelector('input[name="q13"]:checked');
+
+            if (q13 && q13.value === "Samosa") {
+
+                score++;
+
+            }
+
+            // Question 14
+            let q14 = document.querySelector('input[name="q14"]:checked');
+
+            if (q14 && q14.value === "18500") {
+
+                score++;
+
+            }
+
+            // Question 15
+            let q15 = document.querySelector('input[name="q15"]:checked');
+
+            if (q15 && q15.value === "Teamwork") {
+
+                score++;
+
+            }
+            let allInputs =
+                document.querySelectorAll("input");
+
+            allInputs.forEach(function (input) {
+
+                input.disabled = true;
+
+            });
+
+            document.getElementById("submitBtn").disabled = true;
+
+            let reviewHTML = "";
+
+            if (q1.value !== "520") {
+
+                reviewHTML +=
+                    "<p>❌ Question 1 Correct Answer: 520</p>";
+
+            }
+
+            if (q2.value !== "15") {
+
+                reviewHTML +=
+                    "<p>❌ Question 2 Correct Answer: 15th June</p>";
+
+            }
+
+            if (q3.value !== "10") {
+
+                reviewHTML +=
+                    "<p>❌ Question 3 Correct Answer: 10:00 AM</p>";
+
+            }
+
+            if (q4.value !== "5") {
+
+                reviewHTML +=
+                    "<p>❌ Question 4 Correct Answer: 5 Game Stalls</p>";
+
+            }
+
+            if (q5.value !== "Riya") {
+
+                reviewHTML +=
+                    "<p>❌ Question 5 Correct Answer: Riya and Arjun</p>";
+
+            }
+
+            if (q6.value !== "30") {
+
+                reviewHTML +=
+                    "<p>❌ Question 6 Correct Answer: 30 Students</p>";
+
+            }
+
+            if (q7.value !== "50") {
+
+                reviewHTML +=
+                    "<p>❌ Question 7 Correct Answer: 50 Balloons</p>";
+
+            }
+
+            if (q8.value !== "10") {
+
+                reviewHTML +=
+                    "<p>❌ Question 8 Correct Answer: 10 Water Jars</p>";
+
+            }
+
+            if (q9.value !== "Yellow") {
+
+                reviewHTML +=
+                    "<p>❌ Question 9 Correct Answer: Yellow Group</p>";
+
+            }
+
+            if (q10.value !== "50") {
+
+                reviewHTML +=
+                    "<p>❌ Question 10 Correct Answer: ₹50</p>";
+
+            }
+
+            if (q11.value !== "10") {
+
+                reviewHTML +=
+                    "<p>❌ Question 11 Correct Answer: 10 Teams</p>";
+
+            }
+
+            if (q12.value !== "5") {
+
+                reviewHTML +=
+                    "<p>❌ Question 12 Correct Answer: 5 Students</p>";
+
+            }
+
+            if (q13.value !== "Samosa") {
+
+                reviewHTML +=
+                    "<p>❌ Question 13 Correct Answer: Samosa</p>";
+
+            }
+
+            if (q14.value !== "18500") {
+
+                reviewHTML +=
+                    "<p>❌ Question 14 Correct Answer: ₹18,500</p>";
+
+            }
+
+            if (q15.value !== "Teamwork") {
+
+                reviewHTML +=
+                    "<p>❌ Question 15 Correct Answer: Teamwork and honesty are important</p>";
+
+            }
+
+            if (reviewHTML === "") {
+
+                reviewHTML =
+                    "<h3>🎉 Excellent! All Answers Correct!</h3>";
+
+            }
+            document.getElementById("result").innerHTML =
+                playerName + ", Your Score: " + score + "/15";
+
+            document.getElementById("answerReview").innerHTML = reviewHTML;
+        }
+    </script>
+</body>
+
+</html>
