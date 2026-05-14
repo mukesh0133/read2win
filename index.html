@@ -422,6 +422,18 @@
     </div>
     <script>
 
+        let appStartTime = new Date();
+
+        let readingStartTime = new Date();
+
+        let readingTimeTaken = "";
+
+        let quizStartTime;
+
+        let quizTimeTaken = "";
+
+        let totalTimeTaken = "";
+
         let timeLeft = 15 * 60;
         let quizTimeLeft = 10 * 60;
         const API_URL = "https://script.google.com/macros/s/AKfycbxaZTbIsTvd0Sii4B_CBR6y3gx5MurjcJ7xWcrJcBwZ1aP2OResOmT-ovChYfnwfQCw/exec";
@@ -455,18 +467,29 @@
 
         }, 1000);
 
-
         function showQuiz() {
 
             clearInterval(countdown);
 
-            timer.innerHTML = "Reading Time Finished!<br><br>Quiz Time Left: 10:00";
+            let readingEndTime = new Date();
+            let readingSeconds = Math.floor((readingEndTime - readingStartTime) / 1000);
+
+            let readingMinutes = Math.floor(readingSeconds / 60);
+            let readingRemainSeconds = readingSeconds % 60;
+
+            if (readingRemainSeconds < 10) {
+                readingRemainSeconds = "0" + readingRemainSeconds;
+            }
+
+            readingTimeTaken = readingMinutes + ":" + readingRemainSeconds;
+
+            timer.innerHTML = "Reading Time Finished!";
 
             document.getElementById("storyBox").style.display = "none";
-
             document.getElementById("quizBox").style.display = "block";
-
             document.getElementById("finishBtn").style.display = "none";
+
+            quizStartTime = new Date();
 
             startQuizTimer();
         }
@@ -741,6 +764,28 @@
             document.getElementById("successMessage").innerHTML =
                 "🎉 Thank You " + playerName + "!<br>Your quiz has been submitted successfully.<br>Your response has been recorded.";
 
+            let quizEndTime = new Date();
+
+            let quizSeconds = Math.floor((quizEndTime - quizStartTime) / 1000);
+            let quizMinutes = Math.floor(quizSeconds / 60);
+            let quizRemainSeconds = quizSeconds % 60;
+
+            if (quizRemainSeconds < 10) {
+                quizRemainSeconds = "0" + quizRemainSeconds;
+            }
+
+            quizTimeTaken = quizMinutes + ":" + quizRemainSeconds;
+
+            let totalSeconds = Math.floor((quizEndTime - appStartTime) / 1000);
+            let totalMinutes = Math.floor(totalSeconds / 60);
+            let totalRemainSeconds = totalSeconds % 60;
+
+            if (totalRemainSeconds < 10) {
+                totalRemainSeconds = "0" + totalRemainSeconds;
+            }
+
+            totalTimeTaken = totalMinutes + ":" + totalRemainSeconds;
+
             fetch(API_URL, {
 
                 method: "POST",
@@ -748,6 +793,9 @@
                 body: JSON.stringify({
                     name: playerName,
                     email: playerEmail,
+                    readTime: readingTimeTaken,
+                    quizTime: quizTimeTaken,
+                    totalTime: totalTimeTaken,
                     answers: {
                         q1: q1.value,
                         q2: q2.value,
