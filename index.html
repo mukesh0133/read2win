@@ -4,8 +4,6 @@
 <head>
     <title>Read2Win</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <input type="text" id="playerName" placeholder="Enter Your Name" required
-        style="padding:10px; width:250px; font-size:16px;">
 
     <style>
         body {
@@ -68,12 +66,30 @@
             width: 100%;
 
         }
+
+        #successMessage {
+            color: green;
+            margin-top: 30px;
+            font-size: 26px;
+            text-align: center;
+            background-color: #eaffea;
+            padding: 20px;
+            border-radius: 12px;
+        }
     </style>
 </head>
 
 <body>
 
     <h1>📚 Read2Win</h1>
+
+    <input type="text" id="playerName" placeholder="Enter Your Name" required
+        style="padding:10px; width:250px; font-size:16px;">
+
+    <br><br>
+
+    <input type="email" id="playerEmail" placeholder="Enter Your Email" required
+        style="padding:10px; width:250px; font-size:16px;">
 
     <div id="timer">
         Time Left: 15:00
@@ -401,12 +417,14 @@
         </button>
 
         <h2 id="result"></h2>
-        <div id="answerReview"></div>
+        <!-- <div id="answerReview"></div> -->
+        <h2 id="successMessage"></h2>
     </div>
     <script>
 
         let timeLeft = 15 * 60;
         let quizTimeLeft = 10 * 60;
+        const API_URL = "https://script.google.com/macros/s/AKfycbxaZTbIsTvd0Sii4B_CBR6y3gx5MurjcJ7xWcrJcBwZ1aP2OResOmT-ovChYfnwfQCw/exec";
 
         let timer = document.getElementById("timer");
 
@@ -493,6 +511,23 @@
         function submitQuiz() {
             clearInterval(quizCountdown);
             let score = 0;
+
+            let playerName =
+                document.getElementById("playerName").value.trim();
+
+            let playerEmail =
+                document.getElementById("playerEmail").value.trim();
+
+            if (playerName === "") {
+                alert("Please enter your name");
+                return;
+            }
+
+            if (playerEmail === "") {
+                alert("Please enter your email");
+                return;
+            }
+
             let totalQuestions = 15;
 
             let unansweredQuestions = [];
@@ -516,17 +551,6 @@
                     "Please answer Questions: "
                     + unansweredQuestions.join(", ")
                 );
-
-                return;
-
-            }
-
-            let playerName =
-                document.getElementById("playerName").value.trim();
-
-            if (playerName === "") {
-
-                alert("Please enter your name");
 
                 return;
 
@@ -790,10 +814,55 @@
                     "<h3>🎉 Excellent! All Answers Correct!</h3>";
 
             }
-            document.getElementById("result").innerHTML =
-                playerName + ", Your Score: " + score + "/15";
+            // document.getElementById("result").innerHTML =
+            //     playerName + ", Your Score: " + score + "/15";
 
-            document.getElementById("answerReview").innerHTML = reviewHTML;
+            // document.getElementById("answerReview").innerHTML = reviewHTML;
+
+            document.getElementById("successMessage").innerHTML =
+                "🎉 Thank You " + playerName + "!<br>Your quiz has been submitted successfully.<br>Your response has been recorded.";
+
+            fetch(API_URL, {
+
+                method: "POST",
+
+                body: JSON.stringify({
+                    name: playerName,
+                    email: playerEmail,
+                    score: score + "/15",
+                    answers: {
+                        q1: q1.value,
+                        q2: q2.value,
+                        q3: q3.value,
+                        q4: q4.value,
+                        q5: q5.value,
+                        q6: q6.value,
+                        q7: q7.value,
+                        q8: q8.value,
+                        q9: q9.value,
+                        q10: q10.value,
+                        q11: q11.value,
+                        q12: q12.value,
+                        q13: q13.value,
+                        q14: q14.value,
+                        q15: q15.value
+                    }
+                })
+
+            })
+                .then(response => response.json())
+
+                .then(data => {
+
+                    console.log("Success:", data);
+
+                })
+
+                .catch(error => {
+
+                    console.error("Error:", error);
+
+                });
         }
     </script>
 </body>
