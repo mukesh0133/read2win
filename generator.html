@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Read2Win Question Generator</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f5f5f5;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        textarea,
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        pre {
+            background: #111;
+            color: #00ff99;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📚 Read2Win Question Generator</h1>
+
+    <div class="box">
+
+        <label>Paste Story</label>
+        <textarea id="storyInput" rows="12" placeholder="Paste your story here..."></textarea>
+
+        <label>Class Level</label>
+        <select id="classLevel">
+            <option value="Class 1">Class 1</option>
+            <option value="Class 2">Class 2</option>
+            <option value="Class 3">Class 3</option>
+            <option value="Class 4" selected>Class 4</option>
+            <option value="Class 5">Class 5</option>
+        </select>
+
+        <label>Difficulty Level</label>
+        <select id="difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Hard">Hard</option>
+        </select>
+
+        <label>Number of Questions</label>
+        <input type="number" id="questionCount" value="15" min="1" max="50">
+
+        <label>Reading Time Minutes</label>
+        <input type="number" id="readingTimeMinutes" value="15" min="1" max="60">
+
+        <label>Quiz Time Minutes</label>
+        <input type="number" id="quizTimeMinutes" value="10" min="1" max="60">
+
+        <button onclick="generateQuestions()">
+            Generate Questions
+        </button>
+
+    </div>
+
+    <div class="box">
+        <h2>Generated Output</h2>
+        <pre id="outputBox">Questions will appear here...</pre>
+    </div>
+
+    <script>
+        const GENERATOR_API_URL = "https://script.google.com/macros/s/AKfycbwL5tFCb1TYFXK3n0uVyPXA_v9BcWtO7rudahO0f41wQLZCR-cFYZ-0KTo3NhfeFuJk/exec";
+        function generateQuestions() {
+
+            let story = document.getElementById("storyInput").value.trim();
+            let classLevel = document.getElementById("classLevel").value;
+            let difficulty = document.getElementById("difficulty").value;
+            let questionCount = document.getElementById("questionCount").value;
+            let readingTimeMinutes = document.getElementById("readingTimeMinutes").value;
+            let quizTimeMinutes = document.getElementById("quizTimeMinutes").value;
+
+            if (story === "") {
+                alert("Please paste a story first");
+                return;
+            }
+
+            document.getElementById("outputBox").innerText =
+                "Generating questions...";
+
+            fetch(GENERATOR_API_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    story: story,
+                    classLevel: classLevel,
+                    difficulty: difficulty,
+                    questionCount: questionCount,
+                    readingTimeMinutes: readingTimeMinutes,
+                    quizTimeMinutes: quizTimeMinutes
+                })
+            })
+                .then(() => {
+                    document.getElementById("outputBox").innerText =
+                        "✅ Questions generated successfully. Please check Google Sheet.";
+                })
+                .catch(error => {
+                    document.getElementById("outputBox").innerText =
+                        "Error: " + error;
+                });
+        }
+    </script>
+
+</body>
+
+</html>
