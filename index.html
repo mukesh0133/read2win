@@ -13,19 +13,16 @@
         }
 
         p {
-
             font-size: 18px;
-
             line-height: 1.8;
-
         }
 
         input {
-
             margin-top: 10px;
-
             margin-bottom: 10px;
-
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
         }
 
         h1 {
@@ -46,25 +43,15 @@
         }
 
         button {
-
             margin-top: 20px;
-
             padding: 15px 25px;
-
             font-size: 18px;
-
             background-color: black;
-
             color: white;
-
             border: none;
-
             border-radius: 10px;
-
             cursor: pointer;
-
             width: 100%;
-
         }
 
         #successMessage {
@@ -78,35 +65,43 @@
         }
 
         #resultBadge {
-
             display: none;
-
             position: fixed;
-
             top: 20px;
-
             right: 20px;
-
             background: #111;
-
             color: white;
-
             padding: 18px;
-
             border-radius: 14px;
-
             font-size: 18px;
-
             font-weight: bold;
-
             z-index: 9999;
-
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-
             min-width: 220px;
-
             text-align: center;
+        }
 
+        .optionBox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .optionBox input {
+            width: auto;
+            margin: 0;
+        }
+
+        .optionBox:hover {
+            background: #f0f7ff;
+            border-color: #4a90e2;
         }
     </style>
 </head>
@@ -115,27 +110,20 @@
 
     <h1>📚 Read2Win</h1>
 
-
     <div id="resultBadge"></div>
 
-    <input type="text" id="playerName" placeholder="Enter Your Name" required
-        style="padding:10px; width:250px; font-size:16px;">
-
+    <input type="text" id="playerName" placeholder="Enter Your Name" required>
     <br><br>
+    <input type="email" id="playerEmail" placeholder="Enter Your Email" required>
 
-    <input type="email" id="playerEmail" placeholder="Enter Your Email" required
-        style="padding:10px; width:250px; font-size:16px;">
-
-    <div id="timer">
-        Time Left: 15:00
-    </div>
+    <div id="timer">Loading quiz...</div>
 
     <div id="storyBox">
         <h2 id="storyTitle"></h2>
         <div id="storyContent"></div>
     </div>
 
-    <button id="finishBtn" onclick="showQuiz()">
+    <button id="finishBtn" onclick="showQuiz()" disabled>
         I Finished Reading
     </button>
 
@@ -149,66 +137,121 @@
 
         <h2 id="successMessage"></h2>
     </div>
+
     <script>
         let quizData;
-
         let appStartTime = new Date();
-
         let readingStartTime = new Date();
-
         let readingTimeTaken = "";
-
         let quizStartTime;
-
         let quizTimeTaken = "";
-
         let totalTimeTaken = "";
-
-        let timeLeft;
-        let quizTimeLeft;
-        const API_URL = "https://script.google.com/macros/s/AKfycbxaZTbIsTvd0Sii4B_CBR6y3gx5MurjcJ7xWcrJcBwZ1aP2OResOmT-ovChYfnwfQCw/exec";
-        let timer = document.getElementById("timer");
-
+        let timeLeft = 0;
+        let quizTimeLeft = 0;
         let countdown;
         let quizCountdown;
+        const RESULT_API_URL = "https://script.google.com/macros/s/AKfycbxgBKldTLMEGUL8kEwDx2vI2pGS7tDAq2CUwC9R4ZGNQcNToOFhbSVOXZnDi0L0dZfgcQ/exec";
 
-        countdown = setInterval(function () {
+        const QUIZ_API_URL = "https://script.google.com/macros/s/AKfycbyXPmwG2uqHOColU2FTIQFRLv4wDr6tY7sanWfxomALewE4mnllDt9Du7H_JlwxP4FD/exec";
 
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
+        let timer = document.getElementById("timer");
 
-            if (seconds < 10) {
-                seconds = "0" + seconds;
-            }
+        async function loadQuizData() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const quizId = params.get("quizId");
 
-            timer.innerHTML = "Time Left: " + minutes + ":" + seconds;
+                let quizApiUrl = QUIZ_API_URL;
 
-            timeLeft--;
+                if (quizId) {
+                    quizApiUrl += "?quizId=" + encodeURIComponent(quizId);
+                }
 
-            if (timeLeft < 0) {
+                const response = await fetch(quizApiUrl);
+                quizData = await response.json();
 
-                clearInterval(countdown);
+                console.log("QUIZ DATA:", quizData);
 
-                timer.innerHTML = "Reading Time Finished!";
+                if (quizData.error) {
+                    alert("Quiz API Error: " + quizData.message);
+                    timer.innerHTML = "Quiz loading failed.";
+                    return;
+                }
 
+                if (!quizData.story || !quizData.questions || quizData.questions.length === 0) {
+                    alert("Invalid quiz data. Story/questions missing.");
+                    timer.innerHTML = "Invalid quiz data.";
+                    return;
+                }
+
+                timeLeft = Number(quizData.readingTimeMinutes || 5) * 60;
+                quizTimeLeft = Number(quizData.quizTimeMinutes || 3) * 60;
+
+                document.getElementById("storyTitle").innerText = quizData.title || "Read2Win Quiz";
+
+                let storyHTML = "";
+                quizData.story.forEach(function (paragraph) {
+                    storyHTML += "<p>" + paragraph + "</p>";
+                });
+                document.getElementById("storyContent").innerHTML = storyHTML;
+
+                let questionsHTML = "";
+
+                quizData.questions.forEach(function (q, index) {
+                    questionsHTML += "<p><b>" + (index + 1) + ". " + q.question + "</b></p>";
+
+                    let shuffledOptions = shuffleArray(q.options || []);
+
+                    shuffledOptions.forEach(function (option) {
+                        questionsHTML +=
+                            '<label class="optionBox">' +
+                            '<input type="radio" name="' + q.id + '" value="' + option + '">' +
+                            '<span>' + option + '</span>' +
+                            '</label>';
+                    });
+
+                    questionsHTML += "<br>";
+                });
+
+                document.getElementById("questionsContainer").innerHTML = questionsHTML;
                 document.getElementById("finishBtn").disabled = false;
-            }
 
-        }, 1000);
+                startReadingTimer();
+
+            } catch (error) {
+                console.log(error);
+                alert("Failed to load quiz. Check API URL.");
+                timer.innerHTML = "Quiz loading failed.";
+            }
+        }
+
+        function startReadingTimer() {
+            countdown = setInterval(function () {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+
+                if (seconds < 10) seconds = "0" + seconds;
+
+                timer.innerHTML = "Time Left: " + minutes + ":" + seconds;
+
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    timer.innerHTML = "Reading Time Finished!";
+                }
+            }, 1000);
+        }
 
         function showQuiz() {
-
             clearInterval(countdown);
 
             let readingEndTime = new Date();
             let readingSeconds = Math.floor((readingEndTime - readingStartTime) / 1000);
-
             let readingMinutes = Math.floor(readingSeconds / 60);
             let readingRemainSeconds = readingSeconds % 60;
 
-            if (readingRemainSeconds < 10) {
-                readingRemainSeconds = "0" + readingRemainSeconds;
-            }
+            if (readingRemainSeconds < 10) readingRemainSeconds = "0" + readingRemainSeconds;
 
             readingTimeTaken = readingMinutes + ":" + readingRemainSeconds;
 
@@ -224,179 +267,95 @@
         }
 
         function startQuizTimer() {
-
             quizCountdown = setInterval(function () {
-
                 quizTimeLeft--;
 
-                let minutes =
-                    Math.floor(quizTimeLeft / 60);
+                let minutes = Math.floor(quizTimeLeft / 60);
+                let seconds = quizTimeLeft % 60;
 
-                let seconds =
-                    quizTimeLeft % 60;
-
-                if (seconds < 10) {
-
-                    seconds = "0" + seconds;
-
-                }
+                if (seconds < 10) seconds = "0" + seconds;
 
                 timer.innerHTML =
-                    "Reading Time Finished!<br><br>" +
-                    "Quiz Time Left: "
-                    + minutes + ":" + seconds;
+                    "Reading Time Finished!<br><br>Quiz Time Left: " +
+                    minutes + ":" + seconds;
 
                 if (quizTimeLeft <= 0) {
-
                     clearInterval(quizCountdown);
-
                     alert("Quiz Time Finished!");
-
                     submitQuiz();
-
                 }
-
             }, 1000);
-
         }
+
         function submitQuiz() {
-
-            let playerName =
-                document.getElementById("playerName").value;
-
-            let playerEmail =
-                document.getElementById("playerEmail").value;
+            let playerName = document.getElementById("playerName").value;
+            let playerEmail = document.getElementById("playerEmail").value;
 
             if (playerName.trim() === "") {
-
                 alert("Please enter your name");
-
                 return;
-
             }
 
             if (playerEmail.trim() === "") {
-
                 alert("Please enter your email");
-
                 return;
-
             }
 
             let answers = {};
-
             let unansweredQuestions = [];
 
             quizData.questions.forEach(function (q, index) {
-
-                let selected =
-                    document.querySelector(
-                        'input[name="' + q.id + '"]:checked'
-                    );
+                let selected = document.querySelector('input[name="' + q.id + '"]:checked');
 
                 if (selected) {
-
                     answers[q.id] = selected.value;
-
                 } else {
-
                     unansweredQuestions.push(index + 1);
-
                     answers[q.id] = "";
-
                 }
-
             });
 
             if (unansweredQuestions.length > 0) {
-
-                alert(
-                    "Please answer all questions.\n\nUnanswered Questions: " +
-                    unansweredQuestions.join(", ")
-                );
-
+                alert("Please answer all questions.\n\nUnanswered Questions: " + unansweredQuestions.join(", "));
                 return;
-
             }
 
             let quizEndTime = new Date();
 
-            let quizSeconds =
-                Math.floor((quizEndTime - quizStartTime) / 1000);
+            let quizSeconds = Math.floor((quizEndTime - quizStartTime) / 1000);
+            let quizMinutes = Math.floor(quizSeconds / 60);
+            let quizRemainSeconds = quizSeconds % 60;
+            if (quizRemainSeconds < 10) quizRemainSeconds = "0" + quizRemainSeconds;
+            quizTimeTaken = quizMinutes + ":" + quizRemainSeconds;
 
-            let quizMinutes =
-                Math.floor(quizSeconds / 60);
-
-            let quizRemainSeconds =
-                quizSeconds % 60;
-
-            if (quizRemainSeconds < 10) {
-
-                quizRemainSeconds =
-                    "0" + quizRemainSeconds;
-
-            }
-
-            quizTimeTaken =
-                quizMinutes + ":" + quizRemainSeconds;
-
-            let totalSeconds =
-                Math.floor((quizEndTime - appStartTime) / 1000);
-
-            let totalMinutes =
-                Math.floor(totalSeconds / 60);
-
-            let totalRemainSeconds =
-                totalSeconds % 60;
-
-            if (totalRemainSeconds < 10) {
-
-                totalRemainSeconds =
-                    "0" + totalRemainSeconds;
-
-            }
-
-            totalTimeTaken =
-                totalMinutes + ":" + totalRemainSeconds;
+            let totalSeconds = Math.floor((quizEndTime - appStartTime) / 1000);
+            let totalMinutes = Math.floor(totalSeconds / 60);
+            let totalRemainSeconds = totalSeconds % 60;
+            if (totalRemainSeconds < 10) totalRemainSeconds = "0" + totalRemainSeconds;
+            totalTimeTaken = totalMinutes + ":" + totalRemainSeconds;
 
             document.getElementById("submitBtn").disabled = true;
-
             document.getElementById("successMessage").innerHTML = "Submitting your answers...";
 
-            fetch(API_URL, {
-
+            fetch(RESULT_API_URL, {
                 method: "POST",
-
                 body: JSON.stringify({
-
                     quizId: quizData.quizId,
-
                     name: playerName,
-
                     email: playerEmail,
-
                     readTime: readingTimeTaken,
-
                     quizTime: quizTimeTaken,
-
                     totalTime: totalTimeTaken,
-
                     answers: answers
-
                 })
-
             })
-
                 .then(response => response.json())
-
                 .then(result => {
-
                     if (result.result !== "success") {
                         throw new Error(result.message || "Submission failed");
                     }
 
                     clearInterval(quizCountdown);
-
                     timer.innerHTML = "Quiz Submitted Successfully!";
 
                     document.getElementById("successMessage").innerHTML =
@@ -417,109 +376,40 @@
                     }
                 })
                 .catch(error => {
-
                     alert("Submission failed");
                     document.getElementById("submitBtn").disabled = false;
-
                     console.log(error);
-
                 });
-
         }
-        async function loadQuizData() {
-            const params =
-                new URLSearchParams(window.location.search);
-
-            const quizId =
-                params.get("quizId");
-
-            let quizApiUrl =
-                "https://script.google.com/macros/s/AKfycbygj5Uf_Ji6S4-IXDXvnTaF3G5aMKgT_TInJUuFLV-didsBB87LXrVRytE_le2kqeGF/exec";
-            if (quizId) {
-                quizApiUrl += "?quizId=" + encodeURIComponent(quizId);
-            }
-
-            let response =
-                await fetch(quizApiUrl);
-
-            quizData = await response.json();
-
-            timeLeft = quizData.readingTimeMinutes * 60;
-
-            quizTimeLeft = quizData.quizTimeMinutes * 60;
-
-            document.getElementById("storyTitle").innerText = quizData.title;
-
-            let storyHTML = "";
-            quizData.story.forEach(function (paragraph) {
-                storyHTML += "<p>" + paragraph + "</p>";
-            });
-            document.getElementById("storyContent").innerHTML = storyHTML;
-
-            let questionsHTML = "";
-            quizData.questions.forEach(function (q, index) {
-                questionsHTML += "<p>" + (index + 1) + ". " + q.question + "</p>";
-
-                let shuffledOptions =
-                    shuffleArray(q.options);
-
-                shuffledOptions.forEach(function (option) {
-                    questionsHTML +=
-                        '<input type="radio" name="' + q.id + '" value="' + option + '"> ' +
-                        option + "<br>";
-                });
-
-                questionsHTML += "<br><br>";
-            });
-
-            document.getElementById("questionsContainer").innerHTML = questionsHTML;
-        }
-
-        loadQuizData();
 
         function speakCongratulations() {
-
-            let message =
-                new SpeechSynthesisUtterance(
-
-                    "Wonderful! You scored one hundred percent in Read2Win!"
-
-                );
+            let message = new SpeechSynthesisUtterance(
+                "Wonderful! You scored one hundred percent in Read2Win!"
+            );
 
             message.rate = 1;
-
             message.pitch = 1;
-
             message.volume = 1;
 
             window.speechSynthesis.speak(message);
-
         }
 
-
         function shuffleArray(array) {
-
-            let shuffled =
-                [...array];
+            let shuffled = [...array];
 
             for (let i = shuffled.length - 1; i > 0; i--) {
-
-                let j =
-                    Math.floor(Math.random() * (i + 1));
-
-                let temp =
-                    shuffled[i];
-
-                shuffled[i] =
-                    shuffled[j];
-
-                shuffled[j] =
-                    temp;
+                let j = Math.floor(Math.random() * (i + 1));
+                let temp = shuffled[i];
+                shuffled[i] = shuffled[j];
+                shuffled[j] = temp;
             }
 
             return shuffled;
         }
+
+        loadQuizData();
     </script>
+
 </body>
 
 </html>
