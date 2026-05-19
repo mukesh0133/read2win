@@ -1,148 +1,275 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Read2Win Question Generator</title>
+  <title>Read2Win Story & Question Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f5f5f5;
+      margin: 20px;
+    }
 
-    <style>
-        body {
-            font-family: Arial;
-            background-color: #f5f5f5;
-            margin: 20px;
-        }
+    h1 {
+      text-align: center;
+    }
 
-        h1 {
-            text-align: center;
-        }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
 
-        .box {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
+    textarea,
+    select,
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
 
-        textarea,
-        select,
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-        button {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            background-color: black;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+    .green {
+      background-color: green;
+    }
 
-        pre {
-            background: #111;
-            color: #00ff99;
-            padding: 15px;
-            border-radius: 10px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-        }
-    </style>
+    .red {
+      background-color: red;
+    }
+
+    .blue {
+      background-color: #1d4ed8;
+    }
+
+    pre {
+      background: #111;
+      color: #00ff99;
+      padding: 15px;
+      border-radius: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #555;
+      margin-top: -8px;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>📚 Read2Win Question Generator</h1>
+  <h1>📚 Read2Win Story & Question Generator</h1>
 
-    <div class="box">
+  <div class="box">
 
-        <label>Paste Story</label>
-        <textarea id="storyInput" rows="12" placeholder="Paste your story here..."></textarea>
+    <label>Story Generation Prompt</label>
+    <textarea id="storyPrompt" rows="5" placeholder="Example: Create a story which teaches about binary data points and can later be used to generate quiz questions."></textarea>
+    <div class="hint">Use this if you want AI to generate the story.</div>
 
-        <label>Class Level</label>
-        <select id="classLevel">
-            <option value="Class 1">Class 1</option>
-            <option value="Class 2">Class 2</option>
-            <option value="Class 3">Class 3</option>
-            <option value="Class 4" selected>Class 4</option>
-            <option value="Class 5">Class 5</option>
-        </select>
+    <button class="blue" onclick="generateStoryOnly()">Generate Story</button>
 
-        <label>Difficulty Level</label>
-        <select id="difficulty">
-            <option value="Easy">Easy</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="Hard">Hard</option>
-        </select>
+    <label>Or Paste Your Own Story</label>
+    <textarea id="storyInput" rows="12" placeholder="Paste your story here if you already have one..."></textarea>
+    <div class="hint">Generated story will appear here. You can edit it before generating questions.</div>
 
-        <label>Number of Questions</label>
-        <input type="number" id="questionCount" value="10" min="1" max="50">
+    <button class="green" onclick="saveStory()">Save Story</button>
+    <button class="red" onclick="clearStory()">Clear Story</button>
 
-        <label>Reading Time Minutes</label>
-        <input type="number" id="readingTimeMinutes" value="5" min="1" max="60">
+    <label>Target Age / Class</label>
+    <select id="classLevel">
+      <option value="Age 6-7 / Class 1">Age 6-7 / Class 1</option>
+      <option value="Age 7-8 / Class 2">Age 7-8 / Class 2</option>
+      <option value="Age 8-9 / Class 3">Age 8-9 / Class 3</option>
+      <option value="Age 9-10 / Class 4" selected>Age 9-10 / Class 4</option>
+      <option value="Age 10-11 / Class 5">Age 10-11 / Class 5</option>
+      <option value="Age 11-12 / Class 6">Age 11-12 / Class 6</option>
+      <option value="Age 12-14 / Class 7-8">Age 12-14 / Class 7-8</option>
+    </select>
 
-        <label>Quiz Time Minutes</label>
-        <input type="number" id="quizTimeMinutes" value="3" min="1" max="60">
+    <label>English Level</label>
+    <select id="englishLevel">
+      <option value="Very Simple English">Very Simple English</option>
+      <option value="Simple English" selected>Simple English</option>
+      <option value="Moderate English">Moderate English</option>
+      <option value="Advanced English">Advanced English</option>
+    </select>
 
-        <button onclick="generateQuestions()">
-            Generate Questions
-        </button>
+    <label>Story Length</label>
+    <select id="storyLength">
+      <option value="Very short story around 200 words">Very short - around 200 words</option>
+      <option value="Short story around 350 words">Short - around 350 words</option>
+      <option value="Medium story around 500 words" selected>Medium - around 500 words</option>
+      <option value="Long story around 800 words">Long - around 800 words</option>
+      <option value="Very long story around 1000 words">Very long - around 1000 words</option>
+    </select>
 
-    </div>
+    <label>Difficulty Level</label>
+    <select id="difficulty">
+      <option value="Easy">Easy</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
 
-    <div class="box">
-        <h2>Generated Output</h2>
-        <pre id="outputBox">Questions will appear here...</pre>
-    </div>
+    <label>Number of Questions</label>
+    <input type="number" id="questionCount" value="10" min="1" max="10">
 
-    <script>
-        const GENERATOR_API_URL = "https://script.google.com/macros/s/AKfycbyXPmwG2uqHOColU2FTIQFRLv4wDr6tY7sanWfxomALewE4mnllDt9Du7H_JlwxP4FD/exec";
-        function generateQuestions() {
+    <label>Reading Time Minutes</label>
+    <input type="number" id="readingTimeMinutes" value="5" min="1" max="60">
 
-            let story = document.getElementById("storyInput").value.trim();
-            let classLevel = document.getElementById("classLevel").value;
-            let difficulty = document.getElementById("difficulty").value;
-            let questionCount = document.getElementById("questionCount").value;
-            let readingTimeMinutes = document.getElementById("readingTimeMinutes").value;
-            let quizTimeMinutes = document.getElementById("quizTimeMinutes").value;
+    <label>Quiz Time Minutes</label>
+    <input type="number" id="quizTimeMinutes" value="3" min="1" max="60">
 
-            if (story === "") {
-                alert("Please paste a story first");
-                return;
-            }
+    <button onclick="generateQuestions()">Generate Questions</button>
 
-            document.getElementById("outputBox").innerText =
-                "Generating questions...";
+  </div>
 
-            fetch(GENERATOR_API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    story: story,
-                    classLevel: classLevel,
-                    difficulty: difficulty,
-                    questionCount: questionCount,
-                    readingTimeMinutes: readingTimeMinutes,
-                    quizTimeMinutes: quizTimeMinutes
-                })
-            })
-                .then(() => {
-                    document.getElementById("outputBox").innerText =
-                        "✅ Questions generated successfully. Please check Google Sheet.";
-                })
-                .catch(error => {
-                    document.getElementById("outputBox").innerText =
-                        "Error: " + error;
-                });
+  <div class="box">
+    <h2>Generated Output</h2>
+    <pre id="outputBox">Generated result will appear here...</pre>
+  </div>
+
+  <script>
+    const GENERATOR_API_URL = "https://script.google.com/macros/s/AKfycbyXPmwG2uqHOColU2FTIQFRLv4wDr6tY7sanWfxomALewE4mnllDt9Du7H_JlwxP4FD/exec";
+
+    function generateStoryOnly() {
+      const storyPrompt = document.getElementById("storyPrompt").value.trim();
+      const classLevel = document.getElementById("classLevel").value;
+      const englishLevel = document.getElementById("englishLevel").value;
+      const storyLength = document.getElementById("storyLength").value;
+      const readingTimeMinutes = document.getElementById("readingTimeMinutes").value;
+
+      if (storyPrompt === "") {
+        alert("Please enter story generation prompt first.");
+        return;
+      }
+
+      document.getElementById("outputBox").innerText =
+        "Generating story... Please wait.";
+
+      fetch(GENERATOR_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "generateStory",
+          storyPrompt: storyPrompt,
+          classLevel: classLevel,
+          englishLevel: englishLevel,
+          storyLength: storyLength,
+          readingTimeMinutes: readingTimeMinutes
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.error) {
+          document.getElementById("outputBox").innerText =
+            "Error: " + result.message;
+          return;
         }
-    </script>
+
+        document.getElementById("storyInput").value = result.story;
+        localStorage.setItem("read2win_saved_story", result.story);
+
+        document.getElementById("outputBox").innerText =
+          "✅ Story generated successfully. Review/edit it, then click Generate Questions.";
+      })
+      .catch(error => {
+        document.getElementById("outputBox").innerText =
+          "Error: " + error;
+      });
+    }
+
+    function saveStory() {
+      const story = document.getElementById("storyInput").value.trim();
+
+      if (story === "") {
+        alert("No story available to save.");
+        return;
+      }
+
+      localStorage.setItem("read2win_saved_story", story);
+
+      document.getElementById("outputBox").innerText =
+        "✅ Story saved. Now you can generate questions.";
+    }
+
+    function clearStory() {
+      document.getElementById("storyInput").value = "";
+      localStorage.removeItem("read2win_saved_story");
+
+      document.getElementById("outputBox").innerText =
+        "Story cleared. You can generate a new story now.";
+    }
+
+    function generateQuestions() {
+      const storyPrompt = document.getElementById("storyPrompt").value.trim();
+      const story = document.getElementById("storyInput").value.trim();
+      const classLevel = document.getElementById("classLevel").value;
+      const englishLevel = document.getElementById("englishLevel").value;
+      const storyLength = document.getElementById("storyLength").value;
+      const difficulty = document.getElementById("difficulty").value;
+      const questionCount = document.getElementById("questionCount").value;
+      const readingTimeMinutes = document.getElementById("readingTimeMinutes").value;
+      const quizTimeMinutes = document.getElementById("quizTimeMinutes").value;
+
+      if (story === "") {
+        alert("Please generate, paste, or save a story first.");
+        return;
+      }
+
+      document.getElementById("outputBox").innerText =
+        "Generating questions... Please wait.";
+
+      fetch(GENERATOR_API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          action: "generateQuiz",
+          storyPrompt: storyPrompt,
+          story: story,
+          classLevel: classLevel,
+          englishLevel: englishLevel,
+          storyLength: storyLength,
+          difficulty: difficulty,
+          questionCount: questionCount,
+          readingTimeMinutes: readingTimeMinutes,
+          quizTimeMinutes: quizTimeMinutes
+        })
+      })
+      .then(() => {
+        document.getElementById("outputBox").innerText =
+          "✅ Questions generated successfully. Please check Google Sheet.";
+      })
+      .catch(error => {
+        document.getElementById("outputBox").innerText =
+          "Error: " + error;
+      });
+    }
+
+    window.onload = function() {
+      const savedStory = localStorage.getItem("read2win_saved_story");
+      if (savedStory) {
+        document.getElementById("storyInput").value = savedStory;
+      }
+    };
+  </script>
 
 </body>
-
 </html>
